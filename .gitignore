@@ -27,3 +27,14 @@
 *.exe
 *.out
 *.app
+proj.android-studio
+proj.win10
+proj.android
+proj.tizen
+proj.ios_mac
+proj.linux
+proj.win32
+proj.win8.1-universal
+cocos2d
+.cocos-project.json
+CMakeLists.txt

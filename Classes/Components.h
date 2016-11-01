@@ -27,7 +27,7 @@ struct RenderCom : Entity::Component
 		node->addChild(sprite);
 	}
 
-	RenderCom(Size& debugSize, Node* node)
+	RenderCom(Size debugSize, Node* node)
 		:RenderCom()
 	{
 		sprite = Sprite::create("texture.png");
@@ -56,7 +56,7 @@ struct PositionCom : Entity::Component
 
 	PositionCom(){}
 
-	PositionCom(Vec2& _pos)
+	PositionCom(Vec2 _pos)
 		: PositionCom()
 	{
 		pos.set(_pos);
@@ -97,13 +97,16 @@ struct MoveCom : Entity::Component
 struct CollisionCom : Entity::Component
 {
 	static Cid cid;
-
+    
+    int type;//collision type
+    int mask;//filter mask
+    
 	Vec2 offset;
 	Size size;
 
 	CollisionCom(){}
 
-	CollisionCom(Size& _size, Vec2& _offset)
+	CollisionCom(Size _size, Vec2 _offset)
 		: CollisionCom()
 	{
 		size.setSize(_size.width, _size.height);

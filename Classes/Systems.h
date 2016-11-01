@@ -1,3 +1,6 @@
+#ifndef _SYSTEMS_H_
+#define _SYSTEMS_H_
+
 #include "cocos2d.h"
 #include "EntityFu.h"
 #include "Components.h"
@@ -10,7 +13,11 @@ USING_NS_CC;
 class RenderSystem : System
 {
 public:
-	static void tick(double dt);
+	static void tick(float dt);
+    
+private:
+    RenderSystem(){}
+    ~RenderSystem(){}
 };
 
 //////////////////////////////////////////////////////
@@ -19,7 +26,11 @@ public:
 class MoveSystem : System
 {
 public:
-	static void tick(double dt);
+	static void tick(float dt);
+    
+private:
+    MoveSystem(){}
+    ~MoveSystem(){}
 };
 
 //////////////////////////////////////////////////////
@@ -28,12 +39,17 @@ public:
 class InputSystem : System
 {
 public:
-	static void tick(double dt);
+	static void tick(float dt);
+    
 public:
-	static boolean upKeyDown;
-	static boolean downKeyDown;
-	static boolean leftKeyDown;
-	static boolean rightKeyDown;
+	static bool upKeyDown;
+	static bool downKeyDown;
+	static bool leftKeyDown;
+	static bool rightKeyDown;
+    
+private:
+    InputSystem(){}
+    ~InputSystem(){}
 };
 
 //////////////////////////////////////////////////////
@@ -42,5 +58,12 @@ public:
 class CollisionSystem : System
 {
 public:
-	static void tick(double dt);
+	static void tick(float dt);
+    static Eid getCollisionEntity(Eid id);
+    static void collisionHandler(Eid idA, Eid idB);
+private:
+    CollisionSystem(){}
+    ~CollisionSystem(){}
 };
+
+#endif //_SYSTEMS_H_

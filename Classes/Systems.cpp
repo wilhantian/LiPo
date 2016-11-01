@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////
 /// Render
 //////////////////////////////////////////////////////
-void RenderSystem::tick(double dt)
+void RenderSystem::tick(float dt)
 {
 	auto all = Entity::getAll<RenderCom>();
 	for (Eid id : all)
@@ -22,7 +22,7 @@ void RenderSystem::tick(double dt)
 //////////////////////////////////////////////////////
 /// Move
 //////////////////////////////////////////////////////
-void MoveSystem::tick(double dt)
+void MoveSystem::tick(float dt)
 {
 	auto all = Entity::getAll<MoveCom>();
 	for (Eid id : all)
@@ -42,7 +42,7 @@ void MoveSystem::tick(double dt)
 //////////////////////////////////////////////////////
 /// Input
 //////////////////////////////////////////////////////
-void InputSystem::tick(double dt)
+void InputSystem::tick(float dt)
 {
 	auto all = Entity::getAll<InputCom>();
 	for (Eid id : all)
@@ -65,15 +65,15 @@ void InputSystem::tick(double dt)
 	}
 }
 
-boolean InputSystem::rightKeyDown = false;
-boolean InputSystem::leftKeyDown = false;
-boolean InputSystem::downKeyDown = false;
-boolean InputSystem::upKeyDown = false;
+bool InputSystem::rightKeyDown = false;
+bool InputSystem::leftKeyDown = false;
+bool InputSystem::downKeyDown = false;
+bool InputSystem::upKeyDown = false;
 
 //////////////////////////////////////////////////////
 /// Collision
 //////////////////////////////////////////////////////
-void CollisionSystem::tick(double dt)
+void CollisionSystem::tick(float dt)
 {
 	auto all = Entity::getAll<CollisionCom>();
 	for (Eid id : all)
@@ -81,12 +81,10 @@ void CollisionSystem::tick(double dt)
 		Ent e(id);
 		auto& collision = e.collision;
 		auto& position = e.position;
-		auto& move = e.move;
 		auto& render = e.render;
 
 		if (collision.empty()) continue;
 		if (position.empty()) continue;
-		if (move.empty()) continue;
 
 		if (render.full())//debug draw
 		{
@@ -103,28 +101,53 @@ void CollisionSystem::tick(double dt)
 				render.sprite->addChild(debugNode);
 			}
 		}
-
-		/// check
-		Rect rect = Rect(position.pos + collision.offset, collision.size);
-		auto others = Entity::getAll<CollisionCom>();
-		for (Eid oId : others)
-		{
-			if (oId == id) continue;
-
-			Ent oE(oId);
-			auto& oCollision = oE.collision;
-			auto& oPosition = oE.position;
-
-			if (oCollision.empty()) continue;
-			if (oPosition.empty()) continue;
-
-			Rect oRect = Rect(oPosition.pos + oCollision.offset, oCollision.size);
-			if (rect.intersectsRect(oRect))
-			{
-				/// TODO
-				position.pos = position.lastPost;
-				move.speed.setZero();
-			}
-		}
+        
+        /// check collision
+        Eid collId = getCollisionEntity(id);
+        if(collId == id)
+        {
+            continue;
+        }
+        
+        collisionHandler(id, collId);
 	}
+}
+
+Eid CollisionSystem::getCollisionEntity(Eid _id)
+{
+    Ent _e(_id);
+    auto& _collision = _e.collision;
+    auto& _position = _e.position;
+    
+    if(_collision.empty()) return _id;
+    if(_position.empty()) return _id;
+    
+    Rect _rect(_position.pos + _collision.offset, _collision.size);
+    
+    auto all = Entity::getAll<CollisionCom>();
+    for(Eid id : all)
+    {
+        Ent e(id);
+        auto& collision = e.collision;
+        auto& position = e.position;
+        
+        if(id == _id) continue;
+        if(collision.empty()) continue;
+        if(position.empty()) continue;
+        
+        Rect rect(position.pos + collision.offset, collision.size);
+        if(_rect.intersectsRect(rect))
+        {
+            return id;
+        }
+    }
+    return _id;
+}
+
+void CollisionSystem::collisionHandler(Eid idA, Eid idB)
+{
+    Ent entityA(idA);
+    Ent entityB(idB);
+    
+    log("发生碰撞 %d %d", idA, idB);
 }
