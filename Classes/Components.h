@@ -98,17 +98,19 @@ struct CollisionCom : Entity::Component
 {
 	static Cid cid;
     
-    int type;//collision type
-    int mask;//filter mask
+    unsigned type;//collision type 自己的碰撞类型
+    unsigned mask;//filter mask 能跟哪些人发生碰撞
     
 	Vec2 offset;
 	Size size;
 
 	CollisionCom(){}
 
-	CollisionCom(Size _size, Vec2 _offset)
+	CollisionCom(unsigned _type, unsigned _mask, Size _size, Vec2 _offset)
 		: CollisionCom()
 	{
+        type = _type;
+        mask = _mask;
 		size.setSize(_size.width, _size.height);
 		offset.set(_offset);
 	}

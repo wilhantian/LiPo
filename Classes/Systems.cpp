@@ -1,4 +1,5 @@
 #include "Systems.h"
+#include "enums.h"
 
 //////////////////////////////////////////////////////
 /// Render
@@ -134,6 +135,8 @@ Eid CollisionSystem::getCollisionEntity(Eid _id)
         if(id == _id) continue;
         if(collision.empty()) continue;
         if(position.empty()) continue;
+        if(!isCanCollision(_collision.mask, collision.type)) continue;
+        
         
         Rect rect(position.pos + collision.offset, collision.size);
         if(_rect.intersectsRect(rect))
@@ -149,5 +152,19 @@ void CollisionSystem::collisionHandler(Eid idA, Eid idB)
     Ent entityA(idA);
     Ent entityB(idB);
     
-    log("发生碰撞 %d %d", idA, idB);
+    auto& collisionA = entityA.collision;
+    auto& collisionB = entityB.collision;
+    
+    /// 英雄与墙发生碰撞
+    if(collisionA.type == CollisionType::Hero && collisionB.type == CollisionType::Wall)
+    {
+        log("英雄发生墙体碰撞 %d %d", idA, idB);
+        entityA.move.speed.setZero();
+        entityA.position.pos = entityA.position.lastPost;
+    }
+}
+
+bool CollisionSystem::isCanCollision(unsigned int selfMast, unsigned int otherType)
+{
+    return selfMast & otherType;
 }

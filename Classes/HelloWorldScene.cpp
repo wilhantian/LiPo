@@ -2,6 +2,7 @@
 #include "SimpleAudioEngine.h"
 #include "Components.h"
 #include "Systems.h"
+#include "enums.h"
 
 USING_NS_CC;
 
@@ -29,14 +30,20 @@ bool HelloWorld::init()
 	Entity::addComponent(e, new PositionCom());
 	Entity::addComponent(e, new MoveCom(Vec2(60, 60)));
 	Entity::addComponent(e, new InputCom());
-	Entity::addComponent(e, new CollisionCom(Size(50, 20), Vec2(0, 0)));
+    Entity::addComponent(e, new CollisionCom(CollisionType::Hero, CollisionType::Monster | CollisionType::Wall, Size(50, 20), Vec2(0, 0)));
 
 	/// Monster
 	e = Entity::create();
 	Entity::addComponent(e, new RenderCom(Size(40, 40), this));
 	Entity::addComponent(e, new PositionCom(Vec2(240, 200)));
 	Entity::addComponent(e, new MoveCom());
-	Entity::addComponent(e, new CollisionCom(Size(50, 20), Vec2(0, 0)));
+	Entity::addComponent(e, new CollisionCom(CollisionType::Monster, CollisionType::Hero | CollisionType::Wall, Size(50, 20), Vec2(0, 0)));
+    
+    /// Monster
+    e = Entity::create();
+    Entity::addComponent(e, new RenderCom(Size(100, 30), this));
+    Entity::addComponent(e, new PositionCom(Vec2(140, 260)));
+    Entity::addComponent(e, new CollisionCom(CollisionType::Wall, CollisionType::Null, Size(100, 30), Vec2(0, 0)));
 
 	this->scheduleUpdate();
 
@@ -63,7 +70,7 @@ bool HelloWorld::init()
 void HelloWorld::update(float dt)
 {
 	InputSystem::tick(dt);
-	CollisionSystem::tick(dt);
 	MoveSystem::tick(dt);
+    CollisionSystem::tick(dt);
 	RenderSystem::tick(dt);
 }

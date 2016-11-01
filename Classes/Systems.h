@@ -59,8 +59,12 @@ class CollisionSystem : System
 {
 public:
 	static void tick(float dt);
+    
+private:
     static Eid getCollisionEntity(Eid id);
     static void collisionHandler(Eid idA, Eid idB);
+    static bool isCanCollision(unsigned selfMast, unsigned otherType);
+    
 private:
     CollisionSystem(){}
     ~CollisionSystem(){}
