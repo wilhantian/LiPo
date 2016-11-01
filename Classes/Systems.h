@@ -46,7 +46,8 @@ public:
 	static bool downKeyDown;
 	static bool leftKeyDown;
 	static bool rightKeyDown;
-    
+	static bool attackKeyDown;
+
 private:
     InputSystem(){}
     ~InputSystem(){}
@@ -68,6 +69,15 @@ private:
 private:
     CollisionSystem(){}
     ~CollisionSystem(){}
+};
+
+//////////////////////////////////////////////////////
+/// Melee
+//////////////////////////////////////////////////////
+class MeleeSystem : System
+{
+public:
+	static void tick(float dt);
 };
 
 #endif //_SYSTEMS_H_

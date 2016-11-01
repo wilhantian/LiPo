@@ -11,10 +11,11 @@
 
 enum CollisionType
 {
-    Null = 0,//0x00000
-    Hero = 1<<1,//0x00001
-    Monster = 1<<2,//0x00010
-    Wall = 1<<3//0x00100
+    Null = 0,
+    Hero = 1<<1,
+    Monster = 1<<2,
+    Wall = 1<<3,
+	Sword = 1 << 4
 };
 
 /// usge: var types = CollisionType.Hero | CollisionType.Wall

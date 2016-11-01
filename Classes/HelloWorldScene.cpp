@@ -30,6 +30,7 @@ bool HelloWorld::init()
 	Entity::addComponent(e, new PositionCom());
 	Entity::addComponent(e, new MoveCom(Vec2(60, 60)));
 	Entity::addComponent(e, new InputCom());
+	Entity::addComponent(e, new MeleeCom(1));
     Entity::addComponent(e, new CollisionCom(CollisionType::Hero, CollisionType::Monster | CollisionType::Wall, Size(50, 20), Vec2(0, 0)));
 
 	/// Monster
@@ -37,7 +38,7 @@ bool HelloWorld::init()
 	Entity::addComponent(e, new RenderCom(Size(40, 40), this));
 	Entity::addComponent(e, new PositionCom(Vec2(240, 200)));
 	Entity::addComponent(e, new MoveCom());
-	Entity::addComponent(e, new CollisionCom(CollisionType::Monster, CollisionType::Hero | CollisionType::Wall, Size(50, 20), Vec2(0, 0)));
+	Entity::addComponent(e, new CollisionCom(CollisionType::Wall, CollisionType::Hero | CollisionType::Wall, Size(50, 20), Vec2(0, 0)));
     
     /// Monster
     e = Entity::create();
@@ -54,6 +55,7 @@ bool HelloWorld::init()
 		if (EventKeyboard::KeyCode::KEY_S == code) InputSystem::downKeyDown = true;
 		if (EventKeyboard::KeyCode::KEY_A == code) InputSystem::leftKeyDown = true;
 		if (EventKeyboard::KeyCode::KEY_D == code) InputSystem::rightKeyDown = true;
+		if (EventKeyboard::KeyCode::KEY_J == code) InputSystem::attackKeyDown = true;
 	};
 	listener->onKeyReleased = [=](EventKeyboard::KeyCode code, Event* eve)
 	{
@@ -61,6 +63,7 @@ bool HelloWorld::init()
 		if (EventKeyboard::KeyCode::KEY_S == code) InputSystem::downKeyDown = false;
 		if (EventKeyboard::KeyCode::KEY_A == code) InputSystem::leftKeyDown = false;
 		if (EventKeyboard::KeyCode::KEY_D == code) InputSystem::rightKeyDown = false;
+		if (EventKeyboard::KeyCode::KEY_J == code) InputSystem::attackKeyDown = false;
 	};
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
@@ -71,6 +74,7 @@ void HelloWorld::update(float dt)
 {
 	InputSystem::tick(dt);
 	MoveSystem::tick(dt);
+	MeleeSystem::tick(dt);
     CollisionSystem::tick(dt);
 	RenderSystem::tick(dt);
 }

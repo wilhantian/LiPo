@@ -33,6 +33,7 @@ struct RenderCom : Entity::Component
 		sprite = Sprite::create("texture.png");
 		sprite->setAnchorPoint(Vec2(0.5, 0));
 		sprite->setTextureRect(Rect(0, 0, debugSize.width, debugSize.height));
+		sprite->setContentSize(debugSize);
 		sprite->setColor(Color3B::RED);
 		sprite->setOpacity(125);
 		node->addChild(sprite);
@@ -137,6 +138,30 @@ struct InputCom : Entity::Component
 };
 
 //////////////////////////////////////////////////////
+/// Melee
+//////////////////////////////////////////////////////
+struct MeleeCom : Entity::Component
+{
+	static Cid cid;
+
+	int index;
+	long lastAttTime;
+
+	MeleeCom(): index(-1),lastAttTime(0) {};
+
+	MeleeCom(int _index)
+		:MeleeCom()
+	{
+		index = _index;
+	};
+
+	virtual bool empty() const
+	{
+		return index < 0;
+	}
+};
+
+//////////////////////////////////////////////////////
 /// please register in .cpp
 //////////////////////////////////////////////////////
 struct System::Ent
@@ -149,6 +174,7 @@ struct System::Ent
 	MoveCom& move;
 	CollisionCom& collision;
 	InputCom& input;
+	MeleeCom& melee;
 	// END
 
 	Ent(Eid _id);

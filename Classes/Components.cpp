@@ -17,6 +17,7 @@ DEFINE_COM(PositionCom)
 DEFINE_COM(MoveCom)
 DEFINE_COM(CollisionCom)
 DEFINE_COM(InputCom)
+DEFINE_COM(MeleeCom)
 DEFINE_COM_END
 
 /// register component
@@ -26,4 +27,5 @@ REGISTER_COM(PositionCom, position)
 REGISTER_COM(MoveCom, move)
 REGISTER_COM(CollisionCom, collision)
 REGISTER_COM(InputCom, input)
+REGISTER_COM(MeleeCom, melee)
 REGISTER_COM_ENG

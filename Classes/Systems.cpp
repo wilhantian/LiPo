@@ -70,6 +70,7 @@ bool InputSystem::rightKeyDown = false;
 bool InputSystem::leftKeyDown = false;
 bool InputSystem::downKeyDown = false;
 bool InputSystem::upKeyDown = false;
+bool InputSystem::attackKeyDown = false;
 
 //////////////////////////////////////////////////////
 /// Collision
@@ -89,18 +90,19 @@ void CollisionSystem::tick(float dt)
 
 		if (render.full())//debug draw
 		{
-			static int DEBUG_TAG = 0x0025;
-			if (render.sprite->getChildByTag(DEBUG_TAG) == nullptr)
+			int DEBUG_TAG = id;
+			Sprite* debugNode = (Sprite*)render.sprite->getParent()->getChildByTag(DEBUG_TAG);
+			if (debugNode == nullptr)
 			{
-				Sprite* debugNode = Sprite::create("texture.png");
-				debugNode->setPosition(collision.offset + Vec2(render.sprite->getContentSize().width/2, 0));
+				debugNode = Sprite::create("texture.png");
 				debugNode->setAnchorPoint(Vec2(0.5, 0));
 				debugNode->setTag(DEBUG_TAG);
 				debugNode->setTextureRect(Rect(0, 0, collision.size.width, collision.size.height));
-				debugNode->setColor(Color3B::WHITE);
+				debugNode->setColor(Color3B::BLUE);
 				debugNode->setOpacity(50);
-				render.sprite->addChild(debugNode);
+				render.sprite->getParent()->addChild(debugNode);
 			}
+			debugNode->setPosition(position.pos + collision.offset);
 		}
         
         /// check collision
@@ -123,7 +125,7 @@ Eid CollisionSystem::getCollisionEntity(Eid _id)
     if(_collision.empty()) return _id;
     if(_position.empty()) return _id;
     
-    Rect _rect(_position.pos + _collision.offset, _collision.size);
+	Rect _rect(_position.pos + _collision.offset - Vec2(_collision.size.width/2, 0), _collision.size);
     
     auto all = Entity::getAll<CollisionCom>();
     for(Eid id : all)
@@ -137,8 +139,7 @@ Eid CollisionSystem::getCollisionEntity(Eid _id)
         if(position.empty()) continue;
         if(!isCanCollision(_collision.mask, collision.type)) continue;
         
-        
-        Rect rect(position.pos + collision.offset, collision.size);
+		Rect rect(position.pos + collision.offset - Vec2(collision.size.width / 2, 0), collision.size);
         if(_rect.intersectsRect(rect))
         {
             return id;
@@ -156,7 +157,9 @@ void CollisionSystem::collisionHandler(Eid idA, Eid idB)
     auto& collisionB = entityB.collision;
     
     /// 英雄与墙发生碰撞
-    if(collisionA.type == CollisionType::Hero && collisionB.type == CollisionType::Wall)
+    if(collisionA.type == CollisionType::Hero 
+		|| collisionA.type == CollisionType::Monster
+		&& collisionB.type == CollisionType::Wall)
     {
         log("英雄发生墙体碰撞 %d %d", idA, idB);
         entityA.move.speed.setZero();
@@ -167,4 +170,17 @@ void CollisionSystem::collisionHandler(Eid idA, Eid idB)
 bool CollisionSystem::isCanCollision(unsigned int selfMast, unsigned int otherType)
 {
     return selfMast & otherType;
+}
+
+//////////////////////////////////////////////////////
+/// Melee
+//////////////////////////////////////////////////////
+void MeleeSystem::tick(float dt)
+{
+	auto all = Entity::getAll<MeleeCom>();
+	for (Eid id : all)
+	{
+		Ent e(id);
+		auto& melee = e.melee;
+	}
 }
