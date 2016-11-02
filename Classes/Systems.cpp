@@ -1,4 +1,6 @@
 #include "Systems.h"
+#include <ctime>
+
 #include "enums.h"
 
 //////////////////////////////////////////////////////
@@ -213,6 +215,11 @@ void MeleeSystem::tick(float dt)
         if(position.empty()) continue;
         if(!InputSystem::attackKeyDown) continue;
         
+		/// check time
+		clock_t timep = clock();
+		if (timep - melee.lastAttTime < 700) continue;
+		else melee.lastAttTime = timep;
+
         Size size(30, 40);
         Rect rect(position.pos - Vec2(size.width/2, 0), size);
         
@@ -221,8 +228,6 @@ void MeleeSystem::tick(float dt)
         {
             if(id == collisionEid)
                 continue;
-            
-            log("英雄武器与%d发生碰撞", collisionEid);
         }
         
         auto& render = e.render;
