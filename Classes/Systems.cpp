@@ -98,7 +98,7 @@ void CollisionSystem::tick(float dt)
 				debugNode->setAnchorPoint(Vec2(0.5, 0));
 				debugNode->setTag(DEBUG_TAG);
 				debugNode->setTextureRect(Rect(0, 0, collision.size.width, collision.size.height));
-				debugNode->setColor(Color3B::BLUE);
+				debugNode->setColor(Color3B::YELLOW);
 				debugNode->setOpacity(50);
 				render.sprite->getParent()->addChild(debugNode);
 			}
@@ -106,8 +106,8 @@ void CollisionSystem::tick(float dt)
 		}
         
         /// check collision
-        Eid collId = getCollisionEntity(id);
-        if(collId == id)
+        Eid collId = getCollision(e);
+        if(collId == -1)
         {
             continue;
         }
@@ -116,14 +116,13 @@ void CollisionSystem::tick(float dt)
 	}
 }
 
-Eid CollisionSystem::getCollisionEntity(Eid _id)
+Eid CollisionSystem::getCollision(Ent _e)
 {
-    Ent _e(_id);
     auto& _collision = _e.collision;
     auto& _position = _e.position;
     
-    if(_collision.empty()) return _id;
-    if(_position.empty()) return _id;
+    if(_collision.empty()) return -1;
+    if(_position.empty()) return -1;
     
 	Rect _rect(_position.pos + _collision.offset - Vec2(_collision.size.width/2, 0), _collision.size);
     
@@ -134,7 +133,7 @@ Eid CollisionSystem::getCollisionEntity(Eid _id)
         auto& collision = e.collision;
         auto& position = e.position;
         
-        if(id == _id) continue;
+        if(id == _e.id) continue;
         if(collision.empty()) continue;
         if(position.empty()) continue;
         if(!isCanCollision(_collision.mask, collision.type)) continue;
@@ -145,7 +144,33 @@ Eid CollisionSystem::getCollisionEntity(Eid _id)
             return id;
         }
     }
-    return _id;
+    return -1;
+}
+
+std::vector<Eid> CollisionSystem::getCollision(unsigned mask, Rect rect)
+{
+    std::vector<Eid> ids;
+    
+    auto all = Entity::getAll<CollisionCom>();
+    for (Eid id : all)
+    {
+        Ent e(id);
+        auto& collision = e.collision;
+        auto& position = e.position;
+        
+        if(collision.empty()) continue;
+        if(position.empty()) continue;
+        
+        if(!isCanCollision(mask, collision.type)) continue;
+        
+        Rect eRect(position.pos + collision.offset - Vec2(collision.size.width / 2, 0), collision.size);
+        if(rect.intersectsRect(eRect))
+        {
+            ids.push_back(id);
+        }
+    }
+    
+    return ids;
 }
 
 void CollisionSystem::collisionHandler(Eid idA, Eid idB)
@@ -157,8 +182,8 @@ void CollisionSystem::collisionHandler(Eid idA, Eid idB)
     auto& collisionB = entityB.collision;
     
     /// 英雄与墙发生碰撞
-    if(collisionA.type == CollisionType::Hero 
-		|| collisionA.type == CollisionType::Monster
+    if((collisionA.type == CollisionType::Hero
+		|| collisionA.type == CollisionType::Monster)
 		&& collisionB.type == CollisionType::Wall)
     {
         log("英雄发生墙体碰撞 %d %d", idA, idB);
@@ -182,5 +207,37 @@ void MeleeSystem::tick(float dt)
 	{
 		Ent e(id);
 		auto& melee = e.melee;
+        auto& position = e.position;
+        
+        if(melee.empty()) continue;
+        if(position.empty()) continue;
+        if(!InputSystem::attackKeyDown) continue;
+        
+        Size size(30, 40);
+        Rect rect(position.pos - Vec2(size.width/2, 0), size);
+        
+        std::vector<Eid> ids = CollisionSystem::getCollision(CollisionType::Monster | CollisionType::Wall, rect);
+        for(Eid collisionEid : ids)
+        {
+            if(id == collisionEid)
+                continue;
+            
+            log("英雄武器与%d发生碰撞", collisionEid);
+        }
+        
+        auto& render = e.render;
+        if(render.full())
+        {
+            auto debugSrpite = Sprite::create("texture.png");
+            debugSrpite->setPosition(position.pos);
+            debugSrpite->setAnchorPoint(Vec2(0.5, 0));
+            debugSrpite->setTextureRect(Rect(Vec2::ZERO, size));
+            render.sprite->getParent()->addChild(debugSrpite);
+            
+            debugSrpite->scheduleOnce([=](float dt)
+            {
+                debugSrpite->removeFromParent();
+            }, 0.5f, "debugSrpite");
+        }
 	}
 }

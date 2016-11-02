@@ -61,9 +61,14 @@ class CollisionSystem : System
 public:
 	static void tick(float dt);
     
-private:
-    static Eid getCollisionEntity(Eid id);
+public:
+    static Eid getCollision(Ent e);
+    
+    /// get rect eids
+    static std::vector<Eid> getCollision(unsigned mask, Rect rect);
+    
     static void collisionHandler(Eid idA, Eid idB);
+    
     static bool isCanCollision(unsigned selfMast, unsigned otherType);
     
 private:
