@@ -31,6 +31,7 @@ bool HelloWorld::init()
 	Entity::addComponent(e, new MoveCom(Vec2(60, 60)));
 	Entity::addComponent(e, new InputCom());
 	Entity::addComponent(e, new MeleeCom(1));
+    Entity::addComponent(e, new HealthCom(30));
     Entity::addComponent(e, new CollisionCom(CollisionType::Hero, CollisionType::Monster | CollisionType::Wall, Size(50, 20), Vec2(0, 0)));
 
 	/// Monster
@@ -76,5 +77,6 @@ void HelloWorld::update(float dt)
 	MoveSystem::tick(dt);
 	MeleeSystem::tick(dt);
     CollisionSystem::tick(dt);
+    HealthSystem::tick(dt);
 	RenderSystem::tick(dt);
 }

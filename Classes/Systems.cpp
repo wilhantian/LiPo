@@ -43,6 +43,26 @@ void MoveSystem::tick(float dt)
 }
 
 //////////////////////////////////////////////////////
+/// Health
+//////////////////////////////////////////////////////
+void HealthSystem::tick(float dt)
+{
+    auto all = Entity::getAll<HealthCom>();
+    for(Eid id : all)
+    {
+        Ent e(id);
+        auto& health = e.health;
+        
+        if(health.empty()) continue;
+        
+        if(health.hp <= 0)//is death
+        {
+            Entity::destroyNow(id);
+        }
+    }
+}
+
+//////////////////////////////////////////////////////
 /// Input
 //////////////////////////////////////////////////////
 void InputSystem::tick(float dt)
@@ -217,7 +237,7 @@ void MeleeSystem::tick(float dt)
         
 		/// check time
 		clock_t timep = clock();
-		if (timep - melee.lastAttTime < 700) continue;
+		if (timep - melee.lastAttTime < 10000) continue;
 		else melee.lastAttTime = timep;
 
         Size size(30, 40);
@@ -226,8 +246,8 @@ void MeleeSystem::tick(float dt)
         std::vector<Eid> ids = CollisionSystem::getCollision(CollisionType::Monster | CollisionType::Wall, rect);
         for(Eid collisionEid : ids)
         {
-            if(id == collisionEid)
-                continue;
+            if(id == collisionEid) continue;
+            
         }
         
         auto& render = e.render;

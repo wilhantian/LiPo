@@ -93,6 +93,32 @@ struct MoveCom : Entity::Component
 };
 
 //////////////////////////////////////////////////////
+/// Health
+//////////////////////////////////////////////////////
+struct HealthCom : Entity::Component
+{
+    static Cid cid;
+    
+    int hp;
+    bool isDie;
+    
+    HealthCom(): hp(0), isDie(true)
+    {}
+    
+    HealthCom(int _hp)
+        :HealthCom()
+    {
+        hp = _hp;
+        isDie = false;
+    }
+    
+    virtual bool empty() const
+    {
+        return isDie;
+    }
+};
+
+//////////////////////////////////////////////////////
 /// Collision
 //////////////////////////////////////////////////////
 struct CollisionCom : Entity::Component
@@ -172,6 +198,7 @@ struct System::Ent
 	RenderCom& render;
 	PositionCom& position;
 	MoveCom& move;
+    HealthCom& health;
 	CollisionCom& collision;
 	InputCom& input;
 	MeleeCom& melee;
