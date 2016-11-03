@@ -9,6 +9,10 @@
 #ifndef enums_h
 #define enums_h
 
+//  usge: var types = CollisionType.Hero | CollisionType.Wall
+//        if(types & CollisionType.Hero) --> true
+//        if(types & CollisionType.Monster) --> false
+//        if(types & CollisionType.Wall) --> true
 enum CollisionType
 {
     Null = 0,
@@ -18,10 +22,12 @@ enum CollisionType
 	Sword = 1 << 4
 };
 
-/// usge: var types = CollisionType.Hero | CollisionType.Wall
-///       if(types & CollisionType.Hero) --> true
-///       if(types & CollisionType.Monster) --> false
-///       if(types & CollisionType.Wall) --> true
-
+enum DirectionType
+{
+	Up = 0,
+	Down = 1,
+	Left = 2,
+	Right = 3
+};
 
 #endif /* enums_h */

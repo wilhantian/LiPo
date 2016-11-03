@@ -39,6 +39,15 @@ void MoveSystem::tick(float dt)
 
 		position.lastPost.set(position.pos);
 		position.pos.add(move.speed * dt);
+
+		/// set direction
+		float zero = FLT_EPSILON;
+		if (move.speed.x < -zero) e.position.direction = DirectionType::Left;
+		else if (move.speed.x > zero) e.position.direction = DirectionType::Right;
+		else if (move.speed.y < -zero) e.position.direction = DirectionType::Down;
+		else if (move.speed.y > zero) e.position.direction = DirectionType::Up;
+
+		log("%d", e.position.direction);
 	}
 }
 
@@ -237,7 +246,7 @@ void MeleeSystem::tick(float dt)
         
 		/// check time
 		clock_t timep = clock();
-		if (timep - melee.lastAttTime < 10000) continue;
+		if (timep - melee.lastAttTime < 600) continue;
 		else melee.lastAttTime = timep;
 
         Size size(30, 40);

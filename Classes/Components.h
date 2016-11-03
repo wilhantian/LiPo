@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "EntityFu.h"
+#include "enums.h"
 
 USING_NS_CC;
 
@@ -54,8 +55,12 @@ struct PositionCom : Entity::Component
 
 	Vec2 pos;
 	Vec2 lastPost;
+	DirectionType direction;
 
-	PositionCom(){}
+	PositionCom()
+		: pos(Vec2::ZERO)
+		, lastPost(Vec2::ZERO)
+		, direction(DirectionType::Down){}
 
 	PositionCom(Vec2 _pos)
 		: PositionCom()
