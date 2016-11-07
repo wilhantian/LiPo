@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>animations</key>
+	<dict>
+		<key>idle</key>
+		<dict>
+			<key>delay</key>
+			<string>0.26</string>
+			<key>format</key>
+			<string>aaa%d.png</string>
+			<key>frameCount</key>
+			<integer>3</integer>
+		</dict>
+		<key>run</key>
+		<dict>
+			<key>delay</key>
+			<string>0.26</string>
+			<key>format</key>
+			<string>aaa%d.png</string>
+			<key>frameCount</key>
+			<integer>3</integer>
+		</dict>
+	</dict>
+	<key>sounds</key>
+	<dict>
+		<key>hurt</key>
+		<string>123.wav</string>
+	</dict>
+</dict>
+</plist>

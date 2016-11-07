@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "Systems.h"
 #include "enums.h"
+#include "Profile.h"
 
 USING_NS_CC;
 
@@ -67,6 +68,8 @@ bool HelloWorld::init()
 		if (EventKeyboard::KeyCode::KEY_J == code) InputSystem::attackKeyDown = false;
 	};
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
+	Profile::create("profile.plist")->animationForKey("run");
 
     return true;
 }
