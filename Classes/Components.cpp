@@ -12,6 +12,7 @@ USING_NS_CC;
 
 /// define component
 DEFINE_COM_BEGIN
+DEFINE_COM(ProfileCom)
 DEFINE_COM(RenderCom)
 DEFINE_COM(PositionCom)
 DEFINE_COM(MoveCom)
@@ -23,6 +24,7 @@ DEFINE_COM_END
 
 /// register component
 REGISTER_COM_BEGIN
+REGISTER_COM(ProfileCom, profile)
 REGISTER_COM(RenderCom, render)
 REGISTER_COM(PositionCom, position)
 REGISTER_COM(MoveCom, move)

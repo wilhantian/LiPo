@@ -1,24 +1,10 @@
 #include "Profile.h"
 
 
-Profile* Profile::create(std::string filename)
-{
-	auto profile = new Profile();
-	if (profile && profile->init(filename))
-	{
-		profile->autorelease();
-		return profile;
-	}
-	delete profile;
-	profile = nullptr;
-	return nullptr;
-}
-
 bool Profile::init(std::string filename)
 {
 	this->filename = filename;
 	map = FileUtils::getInstance()->getValueMapFromFile(filename);
-	return true;
 }
 
 AnimationProfile* Profile::animationForKey(std::string animationName)
@@ -38,7 +24,7 @@ AnimationProfile* Profile::animationForKey(std::string animationName)
 	for (int i = 0; i < frameCount; i++)
 	{
 		char buf[128];
-		sprintf_s(buf, format.c_str(), i);
+		sprintf(buf, format.c_str(), i);
 		frameNames.push_back(buf);
 	}
 
@@ -49,7 +35,11 @@ AnimationProfile* Profile::animationForKey(std::string animationName)
 
 Profile::Profile()
 {
+}
 
+Profile::Profile(std::string filename)
+{
+    init(filename);
 }
 
 Profile::~Profile()
@@ -71,7 +61,7 @@ AnimationProfile::AnimationProfile(std::vector<std::string> filenames, float del
 
 	for (int i = 0; i < this->frameSize; i++)
 	{
-		auto texture = TextureCache::getInstance()->addImage(filenames[i]);
+		auto texture = Director::getInstance()->getTextureCache()->addImage(filenames[i]);
 		frames.pushBack(texture);
 	}
 }

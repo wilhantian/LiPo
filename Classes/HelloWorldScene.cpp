@@ -69,8 +69,6 @@ bool HelloWorld::init()
 	};
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
-	Profile::create("profile.plist")->animationForKey("run");
-
     return true;
 }
 

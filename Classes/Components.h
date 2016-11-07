@@ -4,8 +4,31 @@
 #include "cocos2d.h"
 #include "EntityFu.h"
 #include "enums.h"
+#include "Profile.h"
 
 USING_NS_CC;
+
+//////////////////////////////////////////////////////
+/// Profile
+//////////////////////////////////////////////////////
+struct ProfileCom : Entity::Component
+{
+    static Cid cid;
+    
+    Profile profile;
+    
+    ProfileCom(){}
+    
+    ProfileCom(std::string profileName)
+    {
+        profile = Profile(profileName);
+    }
+    
+    virtual bool empty() const
+    {
+        return profile.filename.empty();
+    }
+};
 
 //////////////////////////////////////////////////////
 /// Render
@@ -200,6 +223,7 @@ struct System::Ent
 	Eid id;
 
 	// BEGIN
+    ProfileCom& profile;
 	RenderCom& render;
 	PositionCom& position;
 	MoveCom& move;

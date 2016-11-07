@@ -10,11 +10,11 @@ class AnimationProfile;
 class Profile : public Ref
 {
 public:
-	static Profile* create(std::string filename);
 	bool init(std::string filename);
 	AnimationProfile* animationForKey(std::string animationName);
-
-	Profile();
+    
+    Profile();
+	Profile(std::string filename);
 	~Profile();
 
 public:
